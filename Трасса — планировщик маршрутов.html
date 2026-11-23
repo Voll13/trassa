@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Трасса">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMTgwIDE4MCI+PHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSI0MCIgZmlsbD0iIzEwYTM3ZiIvPjxwYXRoIGQ9Ik01NSAxMzBjMC0zMCAyMC00MCAzNS00MHMzNS0xMCAzNS0zNSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1kYXNoYXJyYXk9IjIgMjIiLz48Y2lyY2xlIGN4PSI1NSIgY3k9IjEzMCIgcj0iMTQiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIxMjUiIGN5PSI1NSIgcj0iMTQiIGZpbGw9IiNmZmYiLz48L3N2Zz4=">
+<link rel="manifest" href='data:application/manifest+json,{"name":"Трасса — планировщик","short_name":"Трасса","start_url":".","display":"standalone","background_color":"%230f1115","theme_color":"%230f1115","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMTgwIDE4MCI+PHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSI0MCIgZmlsbD0iIzEwYTM3ZiIvPjxwYXRoIGQ9Ik01NSAxMzBjMC0zMCAyMC00MCAzNS00MHMzNS0xMCAzNS0zNSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1kYXNoYXJyYXk9IjIgMjIiLz48Y2lyY2xlIGN4PSI1NSIgY3k9IjEzMCIgcj0iMTQiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIxMjUiIGN5PSI1NSIgcj0iMTQiIGZpbGw9IiNmZmYiLz48L3N2Zz4=","sizes":"192x192","type":"image/svg+xml"}]}'>
+<style>
+/* Leaflet 1.9.4 */
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+
+</style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<title>Трасса — планировщик маршрутов</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#191c22; --card2:#21252e; --line:#2b303b;
+    --txt:#e9edf2; --mut:#8b93a1; --acc:#10a37f; --danger:#e5484d; --blue:#4f8cff; --r:14px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; font-size:16px; line-height:1.45;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    padding-bottom:calc(90px + env(safe-area-inset-bottom));
+  }
+  header{position:sticky; top:0; z-index:400; background:rgba(15,17,21,.92); backdrop-filter:blur(10px); padding:14px 16px 10px; border-bottom:1px solid var(--line)}
+  header h1{font-size:19px; margin:0}
+  header .sub{font-size:12.5px; color:var(--mut); margin-top:2px}
+  main{padding:14px 16px 20px; max-width:620px; margin:0 auto}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:14px; margin-bottom:14px}
+  .lbl{font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--mut); margin:0 0 8px; font-weight:600}
+  textarea,input{width:100%; background:var(--card2); border:1px solid var(--line); color:var(--txt); border-radius:10px; padding:11px 12px; font-size:16px; font-family:inherit; resize:vertical}
+  textarea{min-height:84px}
+  textarea:focus,input:focus{outline:none; border-color:var(--acc)}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:7px; border:none; border-radius:11px; padding:12px 14px; font-size:15px; font-weight:600; color:#fff; background:var(--acc); cursor:pointer; width:100%; font-family:inherit}
+  .btn:active{transform:scale(.985)}
+  .btn:disabled{opacity:.6}
+  .btn.sec{background:var(--card2); color:var(--txt); border:1px solid var(--line)}
+  .btn.blue{background:var(--blue)}
+  .btn.ghost{background:transparent; color:var(--mut); border:1px solid var(--line)}
+  .btn.sm{padding:9px 11px; font-size:13.5px; width:auto}
+  .row{display:flex; gap:9px}
+  .row>*{flex:1}
+  .muted{color:var(--mut); font-size:13.5px}
+  .pill{display:inline-block; font-size:11px; padding:2px 8px; border-radius:20px; background:var(--card2); color:var(--mut); border:1px solid var(--line)}
+
+  #map{height:300px; width:100%; border-radius:12px; border:1px solid var(--line); background:#222; z-index:1}
+  .leaflet-container{font-family:inherit}
+  .pin{background:var(--acc); color:#fff; border-radius:50% 50% 50% 0; width:26px; height:26px; transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.5); font-weight:700; font-size:12px}
+  .pin span{transform:rotate(45deg)}
+  .pin.start{background:var(--blue)}
+  .pin.done{background:var(--mut)}
+
+  .summary{display:flex; gap:10px; margin:11px 0 0}
+  .summary .box{flex:1; background:var(--card2); border:1px solid var(--line); border-radius:11px; padding:10px; text-align:center}
+  .summary .box .v{font-size:19px; font-weight:700}
+  .summary .box .k{font-size:11px; color:var(--mut); text-transform:uppercase; letter-spacing:.4px}
+
+  ol.stops{list-style:none; margin:0; padding:0}
+  .stop{display:flex; align-items:center; gap:10px; background:var(--card2); border:1px solid var(--line); border-radius:12px; padding:10px 11px; margin-bottom:9px}
+  .stop.done{opacity:.45}
+  .stop.current{border-color:var(--acc); box-shadow:0 0 0 1px var(--acc)}
+  .stop .num{flex:none; width:30px; height:30px; border-radius:9px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:var(--acc); border:1px solid var(--line)}
+  .stop.done .num{color:var(--mut)}
+  .stop .body{flex:1; min-width:0}
+  .stop .addr{font-size:14.5px; word-break:break-word; line-height:1.3}
+  .stop .meta{font-size:11.5px; color:var(--mut); margin-top:3px}
+  .stop .meta b{color:var(--acc); font-weight:700}
+  .stop.done .addr{text-decoration:line-through}
+  .stop .acts{display:flex; flex-direction:column; gap:5px; flex:none}
+  .ibtn{width:34px; height:30px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--txt); font-size:15px; display:flex; align-items:center; justify-content:center; cursor:pointer}
+  .ibtn.go{background:var(--acc); border-color:var(--acc); color:#fff; width:auto; padding:0 11px; font-weight:600; font-size:13px}
+  .arrows{display:flex; flex-direction:column; gap:3px}
+  .arrows .ibtn{height:22px; font-size:11px}
+  .start-chip{display:flex; align-items:center; gap:10px; background:var(--card2); border:1px solid var(--line); border-radius:12px; padding:11px}
+  .start-chip .dot{width:11px; height:11px; border-radius:50%; background:var(--blue); flex:none}
+  .empty{text-align:center; color:var(--mut); font-size:14px; padding:18px 8px}
+  .bottombar{position:fixed; left:0; right:0; bottom:0; z-index:400; background:rgba(15,17,21,.95); backdrop-filter:blur(10px); border-top:1px solid var(--line); padding:10px 16px calc(10px + env(safe-area-inset-bottom)); display:flex; gap:9px; max-width:620px; margin:0 auto}
+  .toast{position:fixed; left:50%; bottom:calc(96px + env(safe-area-inset-bottom)); transform:translateX(-50%); background:#000; color:#fff; padding:10px 16px; border-radius:22px; font-size:13.5px; z-index:500; opacity:0; transition:opacity .25s; pointer-events:none; max-width:90%; text-align:center}
+  .toast.on{opacity:.95}
+  details.saved summary{cursor:pointer; font-weight:600; font-size:14px; list-style:none}
+  details.saved summary::-webkit-details-marker{display:none}
+  .saved-item{display:flex; align-items:center; gap:9px; padding:9px 0; border-top:1px solid var(--line)}
+  .saved-item .nm{flex:1; font-size:14px}
+  .spin{display:inline-block; width:15px; height:15px; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; border-radius:50%; animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .legbtns{display:flex; flex-wrap:wrap; gap:8px}
+  .legbtns .btn{width:auto; flex:1; min-width:120px}
+  /* image overlay */
+  #imgOverlay{position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:700; display:none; flex-direction:column; padding:env(safe-area-inset-top) 14px calc(14px + env(safe-area-inset-bottom))}
+  #imgOverlay.on{display:flex}
+  #imgOverlay img{flex:1; min-height:0; object-fit:contain; border-radius:10px; margin:10px 0}
+  #imgOverlay .hint{color:#ddd; font-size:13px; text-align:center; margin:4px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>🛣️ Трасса</h1>
+  <div class="sub">Планировщик маршрутов доставки</div>
+</header>
+
+<main>
+  <!-- MAP -->
+  <div class="card" id="mapCard" style="display:none">
+    <div id="map"></div>
+    <div class="summary" id="summary"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn sec sm" style="flex:1" onclick="refreshRoute()">🔄 Пересчитать по дорогам</button>
+      <button class="btn blue sm" style="flex:1" onclick="makeImage()">📸 Картинка маршрута</button>
+    </div>
+  </div>
+
+  <!-- START -->
+  <div class="card">
+    <p class="lbl">Старт</p>
+    <div id="startBox"></div>
+    <div class="row" style="margin-top:9px">
+      <button class="btn sec sm" style="flex:1" onclick="useGeo()">📍 Моё место</button>
+      <button class="btn sec sm" style="flex:1" onclick="editStart()">✏️ Задать адрес</button>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:11px;font-size:13.5px;color:var(--mut)">
+      <input type="checkbox" id="roundtrip" style="width:auto" onchange="save();scheduleRoute()">
+      Вернуться в точку старта (круговой маршрут)
+    </label>
+  </div>
+
+  <!-- ADD -->
+  <div class="card">
+    <p class="lbl">Добавить точки</p>
+    <textarea id="addr" placeholder="Вставь адреса — по одному в строке.&#10;Напр.:&#10;Rynek 1, Opole&#10;ul. Krakowska 45, Opole"></textarea>
+    <button class="btn" style="margin-top:9px" id="addBtn" onclick="addStops()">＋ Добавить и найти на карте</button>
+  </div>
+
+  <!-- LIST -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <p class="lbl" style="margin:0">Точки <span id="count" class="pill"></span></p>
+      <button class="btn ghost sm" onclick="clearDone()">Сбросить отметки</button>
+    </div>
+    <ol class="stops" id="list"></ol>
+    <div id="emptyMsg" class="empty">Пока нет точек. Добавь адреса выше ☝️</div>
+  </div>
+
+  <!-- NAV -->
+  <div class="card" id="navCard" style="display:none">
+    <p class="lbl">Открыть в Google Maps</p>
+    <p class="muted" style="margin:-4px 0 10px">Google берёт до 10 точек за раз — длинная трасса делится на части.</p>
+    <div class="legbtns" id="legBtns"></div>
+  </div>
+
+  <!-- SAVED -->
+  <div class="card">
+    <details class="saved">
+      <summary>💾 Сохранённые трассы</summary>
+      <div class="row" style="margin:12px 0 4px">
+        <input id="saveName" placeholder="Название (напр. Понедельник)">
+        <button class="btn sm" style="flex:none" onclick="saveRoute()">Сохранить</button>
+      </div>
+      <div id="savedList"></div>
+    </details>
+  </div>
+
+  <p class="muted" style="text-align:center;font-size:12px;margin-top:4px">Карта и дороги — OpenStreetMap · маршрут — OSRM. Данные трасс хранятся на телефоне.</p>
+</main>
+
+<div class="bottombar">
+  <button class="btn" id="optBtn" onclick="optimize()">⚡ Построить порядок</button>
+  <button class="btn blue" style="flex:none;width:auto;padding:12px 16px" onclick="openAll()">▶︎ Ехать</button>
+</div>
+
+<div id="imgOverlay" onclick="closeImage(event)">
+  <div class="hint">Удерживай картинку → «Сохранить фото», либо «Поделиться»</div>
+  <img id="imgOut" alt="Маршрут">
+  <button class="btn sec" onclick="closeImage(event,true)">Закрыть</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+let state={start:null, stops:[], roundtrip:false, geometry:null, totalKm:0, totalMin:0};
+let map, layer;
+
+/* storage — resilient: localStorage if allowed, else in-memory */
+let _mem={}, LS_OK=true;
+try{ localStorage.setItem("__t","1"); localStorage.removeItem("__t"); }catch(e){ LS_OK=false; }
+function lsGet(k){ try{ return LS_OK?localStorage.getItem(k):(_mem[k]??null); }catch(e){ return _mem[k]??null; } }
+function lsSet(k,v){ try{ if(LS_OK) localStorage.setItem(k,v); else _mem[k]=v; }catch(e){ _mem[k]=v; } }
+function save(){ try{ state.roundtrip=$("#roundtrip").checked; lsSet("trassa_cur", JSON.stringify(state)); }catch(e){} }
+function load(){ try{const s=JSON.parse(lsGet("trassa_cur")); if(s) state=Object.assign(state,s);}catch(e){} $("#roundtrip").checked=!!state.roundtrip; render(); if(state.stops.length){ initMap(); drawMap(); } if(!LS_OK) toast("⚠️ Браузер не сохраняет данные здесь. Открой по ссылке в Safari или добавь на экран «Домой»."); }
+function savedRoutes(){ try{return JSON.parse(lsGet("trassa_saved"))||[]}catch(e){return []} }
+function setSaved(a){ lsSet("trassa_saved", JSON.stringify(a)); }
+
+/* toast */
+let tT; function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("on"); clearTimeout(tT); tT=setTimeout(()=>t.classList.remove("on"),2600); }
+function fmtMin(m){ if(m>=60) return Math.floor(m/60)+" ч "+(m%60)+" мин"; return m+" мин"; }
+
+/* geo */
+function hav(a,b){ const R=6371,dLat=(b.lat-a.lat)*Math.PI/180,dLon=(b.lon-a.lon)*Math.PI/180,la1=a.lat*Math.PI/180,la2=b.lat*Math.PI/180; const h=Math.sin(dLat/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(h)); }
+async function geocode(q){ const url="https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=ru,pl,uk,en&q="+encodeURIComponent(q); const r=await fetch(url,{headers:{"Accept":"application/json"}}); if(!r.ok) throw new Error("net"); const d=await r.json(); if(!d.length) return null; return {lat:+d[0].lat, lon:+d[0].lon, label:d[0].display_name}; }
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* start */
+function useGeo(){ if(!navigator.geolocation){toast("Геолокация недоступна");return;} toast("Определяю место…"); navigator.geolocation.getCurrentPosition(p=>{ state.start={lat:p.coords.latitude,lon:p.coords.longitude,label:"Моё текущее место"}; save(); render(); scheduleRoute(); toast("Старт: текущее место"); }, e=>toast("Разреши доступ к геолокации"), {enableHighAccuracy:true,timeout:10000}); }
+async function editStart(){ const q=prompt("Адрес старта (склад / база):"); if(!q) return; toast("Ищу адрес…"); try{ const g=await geocode(q); if(!g){toast("Адрес не найден");return;} state.start={lat:g.lat,lon:g.lon,label:q}; save(); render(); scheduleRoute(); toast("Старт задан"); }catch(e){toast("Ошибка сети");} }
+
+/* add */
+async function addStops(){
+  const raw=$("#addr").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  if(!raw.length){toast("Введи хотя бы один адрес");return;}
+  const btn=$("#addBtn"); btn.disabled=true; const orig=btn.innerHTML; let ok=0,fail=[];
+  for(let i=0;i<raw.length;i++){
+    btn.innerHTML='<span class="spin"></span> Ищу '+(i+1)+' из '+raw.length+'…';
+    try{ const g=await geocode(raw[i]); if(g){ state.stops.push({id:Date.now()+i,addr:raw[i],lat:g.lat,lon:g.lon,done:false}); ok++; } else fail.push(raw[i]); }catch(e){ fail.push(raw[i]); }
+    if(i<raw.length-1) await sleep(1100);
+  }
+  btn.disabled=false; btn.innerHTML=orig; $("#addr").value=fail.join("\n");
+  save(); render(); initMap(); drawMap();
+  toast(fail.length?("Добавлено "+ok+". Не найдено: "+fail.length):("Добавлено точек: "+ok));
+}
+
+/* list ops */
+function move(i,d){ const j=i+d; if(j<0||j>=state.stops.length)return; [state.stops[i],state.stops[j]]=[state.stops[j],state.stops[i]]; save(); render(); scheduleRoute(); }
+function del(i){ state.stops.splice(i,1); save(); render(); if(state.stops.length) scheduleRoute(); else {clearMap();} }
+function toggle(i){ state.stops[i].done=!state.stops[i].done; save(); render(); }
+function clearDone(){ state.stops.forEach(s=>s.done=false); save(); render(); toast("Отметки сброшены"); }
+
+/* optimize */
+function optimize(){
+  if(state.stops.length<2){toast("Нужно минимум 2 точки");return;}
+  const start=state.start||state.stops[0];
+  let route=[],cur=start,pool=state.stops.slice();
+  while(pool.length){ let bi=0,bd=Infinity; for(let k=0;k<pool.length;k++){const d=hav(cur,pool[k]); if(d<bd){bd=d;bi=k;}} cur=pool[bi]; route.push(cur); pool.splice(bi,1); }
+  const close=state.roundtrip;
+  function dist(a){ let s=0; for(let i=0;i<a.length-1;i++) s+=hav(a[i],a[i+1]); if(close) s+=hav(a[a.length-1],a[0]); return s; }
+  let best=[start,...route],improved=true,g=0;
+  while(improved&&g++<40){ improved=false; for(let i=1;i<best.length-1;i++) for(let j=i+1;j<best.length;j++){ const c=best.slice(0,i).concat(best.slice(i,j+1).reverse(),best.slice(j+1)); if(dist(c)<dist(best)-1e-6){best=c;improved=true;} } }
+  state.stops=best.slice(1); save(); render(); toast("Порядок построен — считаю по дорогам…"); refreshRoute();
+}
+
+/* OSRM route by roads */
+let routeTimer;
+function scheduleRoute(){ clearTimeout(routeTimer); routeTimer=setTimeout(refreshRoute,700); }
+async function refreshRoute(){
+  if(!state.stops.length){clearMap();return;}
+  initMap();
+  const start=state.start||state.stops[0];
+  const seq=[start,...state.stops]; if(state.roundtrip) seq.push(start);
+  const coordStr=seq.map(p=>p.lon+","+p.lat).join(";");
+  const url="https://router.project-osrm.org/route/v1/driving/"+coordStr+"?overview=full&geometries=geojson&annotations=false";
+  try{
+    toast("Строю маршрут по дорогам…");
+    const r=await fetch(url); const d=await r.json();
+    if(d.code!=="Ok"||!d.routes||!d.routes.length) throw 0;
+    const legs=d.routes[0].legs;
+    state.stops.forEach((s,k)=>{ const lg=legs[k]; if(lg){ s.legKm=lg.distance/1000; s.legMin=Math.round(lg.duration/60); } });
+    state.geometry=d.routes[0].geometry.coordinates;
+    state.totalKm=d.routes[0].distance/1000; state.totalMin=Math.round(d.routes[0].duration/60);
+    save(); render(); drawMap();
+    toast("Готово · "+state.totalKm.toFixed(1)+" км · "+fmtMin(state.totalMin));
+  }catch(e){
+    state.geometry=null; save(); drawMap();
+    toast("Нет связи с маршрутизатором — линии показаны напрямую");
+  }
+}
+
+/* map */
+function initMap(){ if(map) return; $("#mapCard").style.display="block"; map=L.map("map",{zoomControl:true,attributionControl:true}).setView([50.67,17.92],9); L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,crossOrigin:true,attribution:"© OpenStreetMap"}).addTo(map); }
+function clearMap(){ if(layer){layer.remove();layer=null;} $("#mapCard").style.display=state.stops.length?"block":"none"; }
+function pinIcon(txt,cls){ return L.divIcon({className:"",html:'<div class="pin '+(cls||"")+'"><span>'+txt+'</span></div>',iconSize:[26,26],iconAnchor:[13,26]}); }
+function drawMap(){
+  if(!state.stops.length){clearMap();return;}
+  initMap(); $("#mapCard").style.display="block";
+  if(layer) layer.remove(); layer=L.layerGroup().addTo(map);
+  const pts=[]; const start=state.start;
+  if(start){ L.marker([start.lat,start.lon],{icon:pinIcon("С","start")}).addTo(layer).bindPopup("Старт"); pts.push([start.lat,start.lon]); }
+  state.stops.forEach((s,i)=>{ L.marker([s.lat,s.lon],{icon:pinIcon(i+1,s.done?"done":"")}).addTo(layer).bindPopup((i+1)+". "+s.addr); pts.push([s.lat,s.lon]); });
+  if(state.geometry){ const line=state.geometry.map(c=>[c[1],c[0]]); L.polyline(line,{color:"#10a37f",weight:5,opacity:.85}).addTo(layer); }
+  else { L.polyline(pts,{color:"#8b93a1",weight:3,dashArray:"6 8",opacity:.8}).addTo(layer); }
+  try{ map.fitBounds(L.latLngBounds(pts).pad(0.15)); }catch(e){}
+  setTimeout(()=>map.invalidateSize(),150);
+}
+
+/* static image (tiles -> canvas) */
+function lon2px(lon,z){ return (lon+180)/360*Math.pow(2,z)*256; }
+function lat2px(lat,z){ const r=lat*Math.PI/180; return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Math.pow(2,z)*256; }
+function loadImg(src){ return new Promise(res=>{ const im=new Image(); im.crossOrigin="anonymous"; im.onload=()=>res(im); im.onerror=()=>res(null); im.src=src; }); }
+async function makeImage(){
+  if(!state.stops.length){toast("Нет точек");return;}
+  toast("Рисую карту…");
+  const W=1000,H=1400,pad=90;
+  const coords=[]; if(state.start) coords.push([state.start.lat,state.start.lon]);
+  state.stops.forEach(s=>coords.push([s.lat,s.lon]));
+  const line = state.geometry ? state.geometry.map(c=>[c[1],c[0]]) : coords.slice();
+  const all=coords.concat(line);
+  let minLat=Math.min(...all.map(p=>p[0])), maxLat=Math.max(...all.map(p=>p[0]));
+  let minLon=Math.min(...all.map(p=>p[1])), maxLon=Math.max(...all.map(p=>p[1]));
+  // pick zoom
+  let z=18;
+  for(; z>2; z--){ const w=lon2px(maxLon,z)-lon2px(minLon,z), h=lat2px(minLat,z)-lat2px(maxLat,z); if(w<=W-pad*2 && h<=H-pad*2) break; }
+  const cx=(lon2px(minLon,z)+lon2px(maxLon,z))/2, cy=(lat2px(minLat,z)+lat2px(maxLat,z))/2;
+  const originX=cx-W/2, originY=cy-H/2;
+  const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const ctx=cv.getContext("2d");
+  ctx.fillStyle="#e8ecef"; ctx.fillRect(0,0,W,H);
+  // tiles
+  const tx0=Math.floor(originX/256), ty0=Math.floor(originY/256), tx1=Math.floor((originX+W)/256), ty1=Math.floor((originY+H)/256);
+  const jobs=[];
+  for(let tx=tx0;tx<=tx1;tx++) for(let ty=ty0;ty<=ty1;ty++){
+    const max=Math.pow(2,z); const wx=((tx%max)+max)%max;
+    if(ty<0||ty>=max) continue;
+    jobs.push(loadImg("https://tile.openstreetmap.org/"+z+"/"+wx+"/"+ty+".png").then(im=>{ if(im) ctx.drawImage(im, tx*256-originX, ty*256-originY); }));
+  }
+  await Promise.all(jobs);
+  // route line
+  const toXY=p=>[lon2px(p[1],z)-originX, lat2px(p[0],z)-originY];
+  ctx.linejoin="round"; ctx.lineCap="round";
+  ctx.strokeStyle="rgba(16,163,127,.9)"; ctx.lineWidth=7; ctx.beginPath();
+  line.forEach((p,i)=>{ const [x,y]=toXY(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke();
+  // markers
+  function marker(p,label,color){ const [x,y]=toXY(p); ctx.beginPath(); ctx.arc(x,y,16,0,7); ctx.fillStyle=color; ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle="#fff"; ctx.stroke(); ctx.fillStyle="#fff"; ctx.font="bold 17px -apple-system,sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(label,x,y); }
+  if(state.start) marker([state.start.lat,state.start.lon],"С","#4f8cff");
+  state.stops.forEach((s,i)=>marker([s.lat,s.lon], String(i+1), s.done?"#8b93a1":"#10a37f"));
+  // title bar
+  ctx.fillStyle="rgba(15,17,21,.86)"; ctx.fillRect(0,0,W,70);
+  ctx.fillStyle="#fff"; ctx.textAlign="left"; ctx.textBaseline="middle";
+  ctx.font="bold 30px -apple-system,sans-serif";
+  const t = state.totalKm ? (state.stops.length+" точек · "+state.totalKm.toFixed(1)+" км · "+fmtMin(state.totalMin)) : (state.stops.length+" точек");
+  ctx.fillText("🛣️ Маршрут: "+t, 24, 36);
+  ctx.fillStyle="rgba(255,255,255,.6)"; ctx.textAlign="right"; ctx.font="13px -apple-system,sans-serif"; ctx.fillText("© OpenStreetMap",W-12,H-14);
+  const url=cv.toDataURL("image/png");
+  $("#imgOut").src=url; $("#imgOverlay").classList.add("on");
+}
+function closeImage(e,force){ if(force||e.target.id==="imgOverlay") $("#imgOverlay").classList.remove("on"); }
+
+/* google maps nav */
+function navOne(i){ const s=state.stops[i]; window.open("https://www.google.com/maps/dir/?api=1&travelmode=driving&destination="+s.lat+","+s.lon,"_blank"); }
+function openAll(){ const p=state.stops.filter(s=>!s.done); if(!p.length){toast("Нет невыполненных точек");return;} window.open("https://www.google.com/maps/dir/?api=1&travelmode=driving&destination="+p[0].lat+","+p[0].lon,"_blank"); }
+function gmapsLeg(points,originCurrent){ const dest=points[points.length-1]; let wps,base; if(originCurrent){ wps=points.slice(0,-1); base="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination="+dest.lat+","+dest.lon; } else { const o=points[0]; wps=points.slice(1,-1); base="https://www.google.com/maps/dir/?api=1&travelmode=driving&origin="+o.lat+","+o.lon+"&destination="+dest.lat+","+dest.lon; } const w=wps.map(p=>p.lat+","+p.lon).join("|"); if(w) base+="&waypoints="+encodeURIComponent(w); return base; }
+function buildLegs(){
+  const box=$("#legBtns"); box.innerHTML=""; const pts=state.stops.filter(s=>!s.done);
+  if(!pts.length){ $("#navCard").style.display="none"; return; } $("#navCard").style.display="block";
+  const MAX=10; let legs=[]; for(let i=0;i<pts.length;i+=MAX) legs.push(pts.slice(i,i+MAX));
+  legs.forEach((leg,idx)=>{ const b=document.createElement("button"); b.className="btn blue"; const f=idx*MAX+1,l=idx*MAX+leg.length; b.textContent=legs.length>1?("Часть "+(idx+1)+": "+f+"–"+l):("Открыть маршрут ("+leg.length+")"); b.onclick=()=>{ let points,oc=false; if(idx===0){ if(state.start&&state.start.label!=="Моё текущее место"){points=[state.start,...leg];} else {points=leg;oc=true;} } else {points=leg;oc=true;} window.open(gmapsLeg(points,oc),"_blank"); }; box.appendChild(b); });
+}
+
+/* saved */
+function saveRoute(){ const nm=$("#saveName").value.trim()||("Трасса "+new Date().toLocaleDateString("ru-RU")); const a=savedRoutes(); a.unshift({name:nm,ts:Date.now(),start:state.start,roundtrip:state.roundtrip,stops:state.stops.map(s=>({addr:s.addr,lat:s.lat,lon:s.lon}))}); setSaved(a); $("#saveName").value=""; renderSaved(); toast("Сохранено: "+nm); }
+function loadRoute(i){ const r=savedRoutes()[i]; if(!r)return; state.start=r.start||null; state.roundtrip=!!r.roundtrip; state.geometry=null; state.stops=r.stops.map((s,k)=>({id:Date.now()+k,addr:s.addr,lat:s.lat,lon:s.lon,done:false})); $("#roundtrip").checked=state.roundtrip; save(); render(); initMap(); drawMap(); scheduleRoute(); window.scrollTo({top:0,behavior:"smooth"}); toast("Загружено: "+r.name); }
+function delRoute(i){ const a=savedRoutes(); a.splice(i,1); setSaved(a); renderSaved(); }
+function renderSaved(){ const box=$("#savedList"),a=savedRoutes(); box.innerHTML=""; if(!a.length){box.innerHTML='<p class="muted" style="margin:10px 0 0">Пусто. Сохрани текущую трассу.</p>';return;} a.forEach((r,i)=>{ const d=document.createElement("div"); d.className="saved-item"; d.innerHTML='<div class="nm">'+esc(r.name)+'<div class="muted" style="font-size:11.5px">'+r.stops.length+' точек · '+new Date(r.ts).toLocaleDateString("ru-RU")+'</div></div>'; const lb=document.createElement("button"); lb.className="btn sm"; lb.style.flex="none"; lb.textContent="Открыть"; lb.onclick=()=>loadRoute(i); const db=document.createElement("button"); db.className="ibtn"; db.textContent="🗑"; db.onclick=()=>{ if(confirm("Удалить «"+r.name+"»?")) delRoute(i); }; d.appendChild(lb); d.appendChild(db); box.appendChild(d); }); }
+
+/* render */
+function esc(s){ return (s||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function render(){
+  const sb=$("#startBox");
+  sb.innerHTML = state.start
+    ? '<div class="start-chip"><span class="dot"></span><div style="flex:1;font-size:14px">'+esc(state.start.label)+'</div></div>'
+    : '<div class="start-chip"><span class="dot" style="background:var(--mut)"></span><div style="flex:1;font-size:14px;color:var(--mut)">Не задан — старт от первой точки</div></div>';
+  const list=$("#list"); list.innerHTML=""; const fp=state.stops.findIndex(s=>!s.done);
+  state.stops.forEach((s,i)=>{
+    const li=document.createElement("li"); li.className="stop"+(s.done?" done":"")+(i===fp?" current":"");
+    const leg = (s.legKm!=null) ? '<b>→ '+s.legKm.toFixed(1)+' км</b> · '+fmtMin(s.legMin)+(i===fp?' · ➡️ следующая':'') : (i===fp?'➡️ следующая':'&nbsp;');
+    li.innerHTML='<div class="arrows"><button class="ibtn" onclick="move('+i+',-1)">▲</button><button class="ibtn" onclick="move('+i+',1)">▼</button></div>'+
+      '<div class="num">'+(i+1)+'</div>'+
+      '<div class="body"><div class="addr">'+esc(s.addr)+'</div><div class="meta">'+leg+(s.done?' · выполнено':'')+'</div></div>'+
+      '<div class="acts"><button class="ibtn go" onclick="navOne('+i+')">GPS</button><button class="ibtn" onclick="toggle('+i+')">'+(s.done?'↩︎':'✓')+'</button><button class="ibtn" onclick="del('+i+')">✕</button></div>';
+    list.appendChild(li);
+  });
+  $("#emptyMsg").style.display=state.stops.length?"none":"block";
+  $("#count").textContent=state.stops.length?(state.stops.filter(s=>!s.done).length+" / "+state.stops.length):"";
+  const sm=$("#summary");
+  if(state.totalKm){ sm.innerHTML='<div class="box"><div class="v">'+state.totalKm.toFixed(1)+'</div><div class="k">км всего</div></div><div class="box"><div class="v">'+fmtMin(state.totalMin)+'</div><div class="k">в пути</div></div><div class="box"><div class="v">'+state.stops.length+'</div><div class="k">точек</div></div>'; }
+  else sm.innerHTML="";
+  buildLegs(); renderSaved();
+}
+
+load();
+</script>
+</body>
+</html>
